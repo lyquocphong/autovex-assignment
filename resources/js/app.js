@@ -13,10 +13,10 @@ import { createApp } from 'vue';
  * to use in your application's views. An example is included for you.
  */
 
-import ExampleComponent from './components/ExampleComponent.vue';
-const app = createApp(ExampleComponent);
-//app.component('example-component', ExampleComponent);
+const app = createApp(App);
 
+import App from './App.vue';
+app.component('app', App);
 
 /**
  * The following block of code may be used to automatically register your
@@ -35,4 +35,5 @@ const app = createApp(ExampleComponent);
  * an "id" attribute of "app". This element is included with the "auth"
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
-app.mount('#app');
+
+app.mount('body');
