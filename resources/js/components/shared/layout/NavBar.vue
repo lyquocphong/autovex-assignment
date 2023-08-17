@@ -30,15 +30,6 @@ import ProfileDropdown from "./ProfileDropdown.vue";
               >About us</router-link
             >
           </li>
-          <li class="nav-item">
-            <router-link
-              :to="{ name: 'login' }"
-              class="nav-link"
-              aria-current="page"
-              href="#"
-              >Login</router-link
-            >
-          </li>
         </ul>
       </div>
 
