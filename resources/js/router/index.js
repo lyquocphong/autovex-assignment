@@ -1,9 +1,12 @@
 import LoginPage from '../pages/LoginPage.vue';
 import RegisterPage from '../pages/RegisterPage.vue';
 import DashboardPage from '../pages/DashboardPage.vue';
+import PageNotFound from '../pages/PageNotFound.vue';
+
 import AboutPage from '../pages/AboutPage.vue';
 import MainLayout from '../components/shared/layout/MainLayout.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../store/auth';
 
 // 2. Define some routes
 // Each route should map to a component.
@@ -13,6 +16,9 @@ const routes = [
         path: '/',
         component: MainLayout,
         redirect: '/',
+        meta: {
+            protected: true
+        },
         children: [
             {
                 path: '/',
@@ -28,6 +34,7 @@ const routes = [
     },
     { path: '/login', name: 'login', component: LoginPage },
     { path: '/register', name: 'register', component: RegisterPage },
+    {  path: '/:pathMatch(.*)*', component: PageNotFound }
 ]
 
 // 3. Create the router instance and pass the `routes` option
@@ -39,4 +46,18 @@ const router = createRouter({
     routes, // short for `routes: routes`
 })
 
+router.beforeEach((to) => {
+    const authStore = useAuthStore()
+    // instead of having to check every route record with
+    // to.matched.some(record => record.meta.requiresAuth)
+    if (to.meta.protected && !authStore.user) {
+      // this route requires auth, check if logged in
+      // if not, redirect to login page.
+      return {
+        path: '/login',
+        // save the location we were at to come back later
+        query: { redirect: to.fullPath },
+      }
+    }
+  })
 export default router;
