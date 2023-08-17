@@ -3,9 +3,10 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
 import { useAuthStore } from "../../../store/auth";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute()
 
 const { values, errors, defineInputBinds, handleSubmit } = useForm({
   validationSchema: toTypedSchema(
@@ -23,7 +24,10 @@ const authStore = useAuthStore();
 
 const onSubmit = handleSubmit(async (values) => {
   await authStore.login(values.email, values.password);
-  router.push({ name: "dashboard", replace: true });
+
+  const destination = route.query?.redirect ?? '/'
+
+  router.push({ path: destination, replace: true });
 });
 </script>
 
@@ -57,7 +61,7 @@ const onSubmit = handleSubmit(async (values) => {
     </div>
   </form>
 
-  <router-link :to="{ name: 'register' }" class="link-primary" aria-current="page" href="#"
+  <router-link :to="{ name: 'register' }" class="link-primary" aria-current="page"
     >Register</router-link
   >
 </template>
