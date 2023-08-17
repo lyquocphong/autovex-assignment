@@ -11,9 +11,10 @@ export const useSettingStore = defineStore("setting", {
   state: () => (getSetting()),
 
   actions: {
-    setSetting(key, value) {
+    async setSetting(key, value) {
       this[key] = value;
       localStorage.setItem('setting', JSON.stringify(this))
+      await new Promise(r => setTimeout(r, 2000));
     },
     clearSetting() {
       localStorage.removeItem('setting')

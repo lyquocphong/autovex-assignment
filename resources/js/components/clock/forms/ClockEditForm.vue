@@ -26,7 +26,7 @@ const props = defineProps({
 
 const { hour, minute } = props;
 
-const { meta, errors, defineInputBinds, handleSubmit } = useForm({
+const { meta, errors, defineInputBinds, handleSubmit, isSubmitting } = useForm({
   validationSchema: toTypedSchema(
     yup.object({
       hour: yup.number().min(0).max(24).required(),
@@ -45,11 +45,10 @@ const minuteInput = defineInputBinds("minute");
 const settingStore = useSettingStore();
 
 const handleSave = handleSubmit(async (values) => {
-  settingStore.setSetting("clock", {
+  await settingStore.setSetting("clock", {
     hour: values.hour,
     minute: values.minute,
   });
-  props.setIsEditing(false);
 });
 
 const onCancel = () => {
@@ -91,8 +90,10 @@ const onCancel = () => {
         type="submit"
         data-bs-toggle="modal"
         data-bs-target="#confirmModal"
-        :disabled="!meta.valid"
+        :disabled="!meta.valid || isSubmitting"
       >
+        <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+
         Save
       </button>
       <button class="btn btn-secondary mt-3" type="button" @click="onCancel">
