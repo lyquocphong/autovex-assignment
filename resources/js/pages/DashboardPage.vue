@@ -1,13 +1,31 @@
 <script setup>
-import Clock from '../components/shared/Clock.vue';
+import Clock from "../components/clock/Clock.vue";
+import ClockView from "../components/clock/ClockView.vue";
+import ClockEditForm from "../components/clock/forms/ClockEditForm.vue";
 import useUser from "../components/composition/useUser.vue";
+import useSetting from "../components/composition/useSetting.vue";
 
-const user = useUser();
-const name = user ? user.name : 'Not logged in';
+const { name } = useUser();
+const { clock } = useSetting();
 </script>
 
 <template>
-   <h1>Dashboard page !</h1>
-   <h2>Welcome back {{name}}</h2>
-   <Clock />
+  <h2 class="text-center">Welcome back {{ name }}</h2>
+  <Clock>
+    <template #default="defaultProps">
+      <ClockView
+        :hour="clock.hour"
+        :minute="clock.minute"
+        :setIsEditing="defaultProps.setIsEditing"
+      />
+    </template>
+
+    <template #editForm="editFormProps">
+      <ClockEditForm
+        :hour="clock.hour"
+        :minute="clock.minute"
+        :setIsEditing="editFormProps.setIsEditing"
+      />
+    </template>
+  </Clock>
 </template>
