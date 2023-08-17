@@ -1,11 +1,11 @@
 <script setup>
 import { useAuthStore } from "../../../store/auth";
-import useUser from "../../composition/useUser.vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const user = useUser();
+
 const authStore = useAuthStore();
+const {user} = authStore;
 
 const onLogout = async () => {
   await authStore.logout();
@@ -17,7 +17,7 @@ const onLogout = async () => {
 </script>
 
 <template>
-  <span v-if="user != null" class="dropdown">
+  <span class="dropdown">
     <div class="btn-group dropstart">
       <button
         type="button"
