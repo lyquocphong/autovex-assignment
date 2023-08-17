@@ -69,7 +69,7 @@ const confirmPasswordInput = defineInputBinds("confirmPassword");
     </div>
   </form>
 
-  <router-link :to="{ name: 'login' }" class="link-primary" aria-current="page" href="#"
+  <router-link :to="{ name: 'login' }" class="link-primary" aria-current="page"
     >Login</router-link
   >
 </template>
