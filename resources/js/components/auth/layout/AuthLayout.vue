@@ -1,17 +1,13 @@
+<script setup>
+import Logo from "../../shared/Logo.vue";
+</script>
+
 <template>
   <div class="container">
-    <div class="card card-container">      
-      <img
-        id="profile-img"
-        class="profile-img-card"
-        src="autovex.svg"
-      />
-      
-      <slot></slot>
+    <div class="card card-container">
+      <Logo />
 
-      <!-- /form -->
+      <slot></slot>
     </div>
-    <!-- /card-container -->
   </div>
-  <!-- /container -->
 </template>
