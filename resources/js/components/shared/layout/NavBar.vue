@@ -1,5 +1,6 @@
 <script setup>
 import Logo from "../Logo.vue";
+import ProfileDropdown from "./ProfileDropdown.vue";
 </script>
 
 <template>
@@ -29,17 +30,19 @@ import Logo from "../Logo.vue";
               >About us</router-link
             >
           </li>
-          <!-- <li class="nav-item">
+          <li class="nav-item">
             <router-link
-              :to="{ name: 'About' }"
+              :to="{ name: 'login' }"
               class="nav-link"
               aria-current="page"
               href="#"
-              >About</router-link
+              >Login</router-link
             >
-          </li> -->
+          </li>
         </ul>
       </div>
+
+      <ProfileDropdown />
     </div>
   </nav>
 </template>

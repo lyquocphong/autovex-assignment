@@ -2,22 +2,33 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
+import { useAuthStore } from "../../../store/auth";
+import { useRouter } from "vue-router";
 
-const { values, errors, defineInputBinds } = useForm({
+const router = useRouter();
+
+const { values, errors, defineInputBinds, handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     yup.object({
       email: yup.string().email().required(),
-      password: yup.string().min(6).required()
+      password: yup.string().required(),
     })
   ),
 });
 
 const emailInput = defineInputBinds("email");
 const passwordInput = defineInputBinds("password");
+
+const authStore = useAuthStore();
+
+const onSubmit = handleSubmit(async (values) => {
+  await authStore.login(values.email, values.password);
+  router.push({ name: "dashboard", replace: true });
+});
 </script>
 
 <template>
-  <form class="mb-3 mt-md-4">    
+  <form @submit="onSubmit" class="mb-3 mt-md-4">
     <div class="mb-3">
       <label for="email" class="form-label">Email address</label>
       <input
@@ -41,12 +52,12 @@ const passwordInput = defineInputBinds("password");
       />
     </div>
     <div>{{ errors.password }}</div>
-
-    <!-- <p class="small">
-      <a class="text-primary" href="forget-password.html">Forgot password?</a>
-    </p> -->
     <div class="d-grid">
       <button class="btn btn-outline-primary" type="submit">Login</button>
     </div>
   </form>
+
+  <router-link :to="{ name: 'register' }" class="link-primary" aria-current="page" href="#"
+    >Register</router-link
+  >
 </template>

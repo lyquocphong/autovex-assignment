@@ -68,4 +68,8 @@ const confirmPasswordInput = defineInputBinds("confirmPassword");
       <button class="btn btn-outline-primary" type="submit">Register</button>
     </div>
   </form>
+
+  <router-link :to="{ name: 'login' }" class="link-primary" aria-current="page" href="#"
+    >Login</router-link
+  >
 </template>

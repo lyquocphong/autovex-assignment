@@ -1,8 +1,8 @@
 <script setup>
-import LoginForm from "../components/auth/forms/LoginForm.vue";
+import RegisterForm from "../components/auth/forms/RegisterForm.vue";
 import AuthLayout from "../components/auth/layout/AuthLayout.vue";
 </script>
 
 <template>
-  <AuthLayout> <LoginForm /></AuthLayout>
+  <AuthLayout> <RegisterForm /></AuthLayout>
 </template>

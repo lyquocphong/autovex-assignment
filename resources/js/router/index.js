@@ -1,4 +1,5 @@
 import LoginPage from '../pages/LoginPage.vue';
+import RegisterPage from '../pages/RegisterPage.vue';
 import DashboardPage from '../pages/DashboardPage.vue';
 import AboutPage from '../pages/AboutPage.vue';
 import MainLayout from '../components/shared/layout/MainLayout.vue'
@@ -25,7 +26,8 @@ const routes = [
             }
         ]
     },
-    { path: '/login', component: LoginPage },
+    { path: '/login', name: 'login', component: LoginPage },
+    { path: '/register', name: 'register', component: RegisterPage },
 ]
 
 // 3. Create the router instance and pass the `routes` option
