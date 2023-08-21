@@ -4,11 +4,13 @@ import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
 import { useAuthStore } from "../../../store/auth";
 import { useRouter, useRoute } from "vue-router";
+import useApi from "../../composition/useApi";
+import { login } from "../../../service";
 
 const router = useRouter();
-const route = useRoute()
+const route = useRoute();
 
-const { values, errors, defineInputBinds, handleSubmit } = useForm({
+const { errors: formErrors, defineInputBinds, handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     yup.object({
       email: yup.string().email().required(),
@@ -17,21 +19,38 @@ const { values, errors, defineInputBinds, handleSubmit } = useForm({
   ),
 });
 
+const {
+  isLoading,
+  result,
+  error: apiError,
+  execute: executeLogin,
+} = useApi((email, password) => login(email, password));
+
 const emailInput = defineInputBinds("email");
 const passwordInput = defineInputBinds("password");
 
 const authStore = useAuthStore();
 
 const onSubmit = handleSubmit(async (values) => {
-  await authStore.login(values.email, values.password);
+  const user = await executeLogin(values.email, values.password);
 
-  const destination = route.query?.redirect ?? '/'
+  if (!user) {
+    return;
+  }
+  
+  await authStore.login(user);
+
+  const destination = route.query?.redirect ?? "/";
 
   router.push({ path: destination, replace: true });
 });
 </script>
 
 <template>
+  <div v-if="apiError?.message" class="alert alert-danger mt-4" role="alert">
+    {{ apiError.message }}
+  </div>
+
   <form @submit="onSubmit" class="mb-3 mt-md-4">
     <div class="mb-3">
       <label for="email" class="form-label">Email address</label>
@@ -43,7 +62,7 @@ const onSubmit = handleSubmit(async (values) => {
         placeholder="name@example.com"
       />
     </div>
-    <div>{{ errors.email }}</div>
+    <div>{{ formErrors.email }}</div>
 
     <div class="mb-3">
       <label for="password" class="form-label">Password</label>
@@ -55,13 +74,13 @@ const onSubmit = handleSubmit(async (values) => {
         placeholder="*******"
       />
     </div>
-    <div>{{ errors.password }}</div>
-    <div class="d-grid">
-      <button class="btn btn-outline-primary" type="submit">Login</button>
+    <div>{{ formErrors.password }}</div>
+    <div class="form-group mt-3">
+      <button class="btn btn-primary" :disabled="isLoading">
+        <span v-show="isLoading" class="spinner-border spinner-border-sm mr-1"></span>
+        Login
+      </button>
+      <router-link :to="{ name: 'register' }" class="btn btn-link">Register</router-link>
     </div>
   </form>
-
-  <router-link :to="{ name: 'register' }" class="link-primary" aria-current="page"
-    >Register</router-link
-  >
 </template>
