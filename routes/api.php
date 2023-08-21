@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +15,14 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [UserController::class, 'info']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/setting/clock', [UserController::class, 'setClockSetting']);
 });
 
-Route::name('auth.')->group(function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-});
+// Public routes
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
