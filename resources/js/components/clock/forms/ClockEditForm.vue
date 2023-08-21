@@ -3,6 +3,8 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
 import { useSettingStore } from "../../../store/setting";
+import { setClockSetting } from "../../../service";
+import useApi from "../../composition/useApi";
 
 const props = defineProps({
   hour: {
@@ -44,11 +46,21 @@ const minuteInput = defineInputBinds("minute");
 
 const settingStore = useSettingStore();
 
+const { isLoading, error: apiError, execute: saveClockSetting } = useApi((hour, minute) =>
+  setClockSetting(hour, minute)
+);
+
 const handleSave = handleSubmit(async (values) => {
-  await settingStore.setSetting("clock", {
+  
+  if(!await saveClockSetting(values.hour, values.minute)) {
+    return;
+  }
+
+  await settingStore.editSetting("clock", {
     hour: values.hour,
     minute: values.minute,
   });
+  props.setIsEditing(false);
 });
 
 const onCancel = () => {
@@ -57,6 +69,9 @@ const onCancel = () => {
 </script>
 
 <template>
+  <div v-if="apiError?.message" class="alert alert-danger mt-4" role="alert">
+    {{ apiError.message }}
+  </div>
   <h3>Edit Clock</h3>
   <form @submit.prevent class="mb-3 mt-md-4">
     <div class="mb-3">
@@ -92,7 +107,7 @@ const onCancel = () => {
         data-bs-target="#confirmModal"
         :disabled="!meta.valid || isSubmitting"
       >
-        <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+        <span v-show="isLoading" class="spinner-border spinner-border-sm mr-1"></span>
 
         Save
       </button>
@@ -126,7 +141,14 @@ const onCancel = () => {
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Close
           </button>
-          <button type="button" class="btn btn-primary" @click="handleSave" data-bs-dismiss="modal">Save changes</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="handleSave"
+            data-bs-dismiss="modal"
+          >
+            Save changes
+          </button>
         </div>
       </div>
     </div>
