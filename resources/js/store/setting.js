@@ -4,19 +4,25 @@ import { defineStore } from "pinia";
 const getSetting = () => {
   const setting = localStorage.getItem('setting')
 
-  return setting ? JSON.parse(setting) : null;
+  return setting ? JSON.parse(setting) : {};
 }
 
 export const useSettingStore = defineStore("setting", {
-  state: () => (getSetting()),
+  state: () => ({
+    setting: getSetting(),
+  }),
 
   actions: {
-    async setSetting(key, value) {
-      this[key] = value;
-      localStorage.setItem('setting', JSON.stringify(this))
-      await new Promise(r => setTimeout(r, 2000));
+    setSetting(value) {
+      this.setting = {...value};
+      localStorage.setItem('setting', JSON.stringify(this.setting))
+    },
+    editSetting(key, value) {
+      this.setting[key] = value;
+      this.setSetting(this.setting);
     },
     clearSetting() {
+      this.setting = null;
       localStorage.removeItem('setting')
     }
   },

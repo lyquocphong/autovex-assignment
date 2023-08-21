@@ -1,10 +1,9 @@
-<script>
 import { storeToRefs } from "pinia";
 
 import { useSettingStore } from "../../store/setting";
 
 export default () => {
-  const setting = useSettingStore();
-  return storeToRefs(setting);
+  const store = useSettingStore();
+  const { setting } = storeToRefs(store);  
+  return setting;
 }
-</script>

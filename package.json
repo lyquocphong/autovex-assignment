@@ -16,6 +16,7 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "php": ">=8.1",
         "@vee-validate/yup": "^4.11.1",
         "pinia": "^2.1.6",
         "vee-validate": "^4.11.1",

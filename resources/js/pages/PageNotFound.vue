@@ -1,5 +1,5 @@
 <script setup>
-import useUser from "../components/composition/useUser.vue";
+import useUser from "../components/composition/useUser";
 
 const user = useUser();
 </script>
