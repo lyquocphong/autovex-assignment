@@ -61,7 +61,11 @@ class AuthController extends BaseController
 
         $newUser = User::create($userInfo);
 
+        Auth::loginUsingId($newUser->id);
+
         $data = $this->generateResponseData($newUser);
+
+        $request->session()->regenerate();
 
         return $this->respondSuccess('Register success', HttpStatusCodes::CREATED, $data);
     }
